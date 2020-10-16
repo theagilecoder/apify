@@ -5,8 +5,10 @@ defmodule ApifyWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", ApifyWeb do
+  scope "/api/v1", ApifyWeb do
     pipe_through :api
+
+    resources "/users", UserController, only: [:create, :show]
   end
 
   # Enables LiveDashboard only for development
