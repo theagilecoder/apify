@@ -8,7 +8,7 @@ defmodule ApifyWeb.Router do
   scope "/api/v1", ApifyWeb do
     pipe_through :api
 
-    resources "/users", UserController, only: [:create, :show]
+    post "/register", UserController, :create
   end
 
   # Enables LiveDashboard only for development

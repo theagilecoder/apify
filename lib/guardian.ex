@@ -1,8 +1,8 @@
 defmodule Apify.Guardian do
-  use Guardian, otp_app: :myApi
+  use Guardian, otp_app: :apify
   alias Apify.Accounts.User
 
-  def subject_for_token(user = %User{}, _claims) do
+  def subject_for_token(%User{} = user, _claims) do
     sub = to_string(user.id)
     {:ok, sub}
   end
