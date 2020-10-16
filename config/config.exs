@@ -29,3 +29,8 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+
+# Guardian config
+config :apify, Apify.Guardian,
+  issuer: "apify",
+  secret_key: "t4B65ggw77I4HrmC2GwSUrhBZ85NLaq8g/yU1Rc51tK8fXLrjLnvdprr3e3aEYpK"
