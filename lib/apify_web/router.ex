@@ -9,6 +9,7 @@ defmodule ApifyWeb.Router do
     pipe_through :api
 
     post "/register", UserController, :create
+    post "/login", UserController, :login
   end
 
   # Enables LiveDashboard only for development

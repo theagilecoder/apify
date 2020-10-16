@@ -15,10 +15,9 @@ defmodule ApifyWeb.FallbackController do
   end
 
   # This clause is an example of how to handle resources that cannot be found.
-  def call(conn, {:error, :not_found}) do
+  def call(conn, {:error, :unauthorized}) do
     conn
-    |> put_status(:not_found)
-    |> put_view(ApifyWeb.ErrorView)
-    |> render(:"404")
+    |> put_status(:unauthorized)
+    |> json(%{error: "Login error"})
   end
 end

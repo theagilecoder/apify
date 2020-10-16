@@ -5,7 +5,7 @@ defmodule Apify.Accounts do
 
   import Ecto.Query, warn: false
   alias Apify.Repo
-
+  alias Apify.Guardian
   alias Apify.Accounts.User
 
   @doc """
@@ -100,5 +100,40 @@ defmodule Apify.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  # Retrieve a User by email
+  defp get_by_email(email) when is_binary(email) do
+    case Repo.get_by(User, email: email) do
+      nil ->
+        Bcrypt.no_user_verify()
+        {:error, "Login error."}
+      user ->
+        {:ok, user}
+    end
+  end
+
+  # Verify password input is correct
+  defp verify_password(password, %User{} = user) when is_binary(password) do
+    if Bcrypt.verify_pass(password, user.password_hash) do
+      {:ok, user}
+    else
+      {:error, :invalid_password}
+    end
+  end
+
+  # Check if email password combo is correct
+  defp email_password_auth(email, password) do
+    with {:ok, user} <- get_by_email(email) do
+      verify_password(password, user)
+    end
+  end
+
+  # Encode and sign a token for authenticated user
+  def token_sign_in(email, password) do
+    case email_password_auth(email, password) do
+      {:ok, user} -> Guardian.encode_and_sign(user)
+      _ -> {:error, :unauthorized}
+    end
   end
 end
