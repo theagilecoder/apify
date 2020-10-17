@@ -1,8 +1,14 @@
 defmodule ApifyWeb.Router do
   use ApifyWeb, :router
 
+  alias Apify.Guardian
+
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :jwt_authenticated do
+    plug Guardian.AuthPipeline
   end
 
   scope "/api/v1", ApifyWeb do
@@ -10,6 +16,12 @@ defmodule ApifyWeb.Router do
 
     post "/register", UserController, :create
     post "/login", UserController, :login
+  end
+
+  scope "/api/v1", ApifyWeb do
+    pipe_through :jwt_authenticated
+
+    get "/my_user", UserController, :show
   end
 
   # Enables LiveDashboard only for development
